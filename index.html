@@ -1,0 +1,993 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Laura's Dirty 30 – Mallorca Edition</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Lato:wght@300;400;700&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --cream: #f5efe6;
+      --beige: #e8ddd0;
+      --sand: #d4c4a8;
+      --terracotta: #c47a5a;
+      --terra-dark: #a05c3a;
+      --olive: #7a8c6a;
+      --warm-dark: #3d2e1e;
+      --text: #4a3728;
+      --white: #fdfaf6;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background-color: var(--cream);
+      color: var(--text);
+      font-family: 'Lato', sans-serif;
+      font-weight: 300;
+      overflow-x: hidden;
+    }
+
+    /* KONFETTI */
+    #confetti-canvas {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      pointer-events: none;
+      z-index: 9999;
+    }
+
+    /* NAV */
+    nav {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 100;
+      padding: 1rem 2rem;
+      display: flex;
+      justify-content: center;
+      gap: 2rem;
+      background: rgba(245, 239, 230, 0.92);
+      backdrop-filter: blur(8px);
+      border-bottom: 1px solid var(--sand);
+      flex-wrap: wrap;
+    }
+
+    nav a {
+      font-family: 'Lato', sans-serif;
+      font-weight: 400;
+      font-size: 0.8rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--text);
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+
+    nav a:hover { color: var(--terracotta); }
+
+    /* HERO */
+    .hero {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 6rem 2rem 4rem;
+      background:
+        radial-gradient(ellipse at 20% 50%, rgba(196, 122, 90, 0.12) 0%, transparent 60%),
+        radial-gradient(ellipse at 80% 20%, rgba(122, 140, 106, 0.1) 0%, transparent 50%),
+        var(--cream);
+      position: relative;
+    }
+
+    .hero::before {
+      content: '';
+      position: absolute;
+      bottom: 0; left: 0; right: 0;
+      height: 120px;
+      background: linear-gradient(to bottom, transparent, var(--beige));
+      pointer-events: none;
+    }
+
+    .hero-eyebrow {
+      font-size: 0.75rem;
+      letter-spacing: 0.3em;
+      text-transform: uppercase;
+      color: var(--terracotta);
+      margin-bottom: 1.5rem;
+      animation: fadeUp 0.8s ease both;
+    }
+
+    .hero-title {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(3rem, 10vw, 7rem);
+      font-weight: 700;
+      line-height: 1.05;
+      color: var(--warm-dark);
+      margin-bottom: 0.5rem;
+      animation: fadeUp 0.8s 0.15s ease both;
+    }
+
+    .hero-title em {
+      font-style: italic;
+      color: var(--terracotta);
+    }
+
+    .hero-subtitle {
+      font-family: 'Playfair Display', serif;
+      font-style: italic;
+      font-size: clamp(1.2rem, 3vw, 2rem);
+      color: var(--sand);
+      margin-bottom: 2.5rem;
+      animation: fadeUp 0.8s 0.3s ease both;
+    }
+
+    .hero-meta {
+      font-size: 1rem;
+      letter-spacing: 0.08em;
+      color: var(--olive);
+      animation: fadeUp 0.8s 0.45s ease both;
+      margin-bottom: 3rem;
+    }
+
+    .palm-row {
+      font-size: 2.5rem;
+      animation: fadeUp 0.8s 0.6s ease both;
+      margin-bottom: 2rem;
+      letter-spacing: 0.3rem;
+    }
+
+    .scroll-hint {
+      position: absolute;
+      bottom: 2rem;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.5rem;
+      font-size: 0.7rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--sand);
+      animation: fadeUp 1s 1s ease both;
+    }
+
+    .scroll-hint::after {
+      content: '';
+      width: 1px;
+      height: 40px;
+      background: linear-gradient(to bottom, var(--sand), transparent);
+      animation: scrollLine 1.5s ease-in-out infinite;
+    }
+
+    @keyframes scrollLine {
+      0%, 100% { opacity: 0.4; transform: scaleY(1); }
+      50% { opacity: 1; transform: scaleY(1.2); }
+    }
+
+    /* SECTIONS */
+    section {
+      padding: 6rem 2rem;
+      max-width: 900px;
+      margin: 0 auto;
+    }
+
+    .section-label {
+      font-size: 0.7rem;
+      letter-spacing: 0.35em;
+      text-transform: uppercase;
+      color: var(--terracotta);
+      margin-bottom: 1rem;
+      display: block;
+    }
+
+    .section-title {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(2rem, 5vw, 3.5rem);
+      color: var(--warm-dark);
+      margin-bottom: 1.5rem;
+      line-height: 1.15;
+    }
+
+    hr.divider {
+      border: none;
+      height: 1px;
+      background: linear-gradient(to right, transparent, var(--sand), transparent);
+      margin: 0 auto 3rem;
+      max-width: 900px;
+    }
+
+    /* COUNTDOWN */
+    .countdown-section {
+      background: var(--beige);
+      padding: 5rem 2rem;
+      text-align: center;
+    }
+
+    .countdown-section .section-title {
+      max-width: 600px;
+      margin: 0 auto 2.5rem;
+    }
+
+    .countdown-grid {
+      display: flex;
+      justify-content: center;
+      gap: 1.5rem;
+      flex-wrap: wrap;
+    }
+
+    .countdown-box {
+      background: var(--white);
+      border: 1px solid var(--sand);
+      border-radius: 12px;
+      padding: 1.5rem 2rem;
+      min-width: 90px;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.04);
+    }
+
+    .countdown-number {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(2.5rem, 8vw, 4rem);
+      font-weight: 700;
+      color: var(--terracotta);
+      line-height: 1;
+      display: block;
+    }
+
+    .countdown-label {
+      font-size: 0.65rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--sand);
+      margin-top: 0.5rem;
+      display: block;
+    }
+
+    /* DETAILS */
+    .details-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1.5rem;
+      margin-top: 2rem;
+    }
+
+    .detail-card {
+      background: var(--white);
+      border: 1px solid var(--sand);
+      border-radius: 12px;
+      padding: 2rem;
+      box-shadow: 0 2px 12px rgba(0,0,0,0.04);
+    }
+
+    .detail-card .icon { font-size: 1.8rem; margin-bottom: 0.8rem; display: block; }
+    .detail-card h3 {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.3rem;
+      color: var(--warm-dark);
+      margin-bottom: 0.5rem;
+    }
+    .detail-card p { font-size: 0.95rem; line-height: 1.7; color: var(--text); }
+
+    @media (max-width: 580px) {
+      .details-grid { grid-template-columns: 1fr; }
+    }
+
+    /* SCHEDULE */
+    .schedule-section { background: var(--beige); padding: 5rem 2rem; }
+    .schedule-inner { max-width: 700px; margin: 0 auto; }
+
+    .schedule-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 2rem;
+    }
+
+    .schedule-table tr {
+      border-bottom: 1px solid var(--sand);
+    }
+
+    .schedule-table tr:last-child { border-bottom: none; }
+
+    .schedule-table td {
+      padding: 1.1rem 0.5rem;
+      font-size: 0.95rem;
+      line-height: 1.5;
+    }
+
+    .schedule-table td:first-child {
+      font-weight: 700;
+      color: var(--terracotta);
+      white-space: nowrap;
+      padding-right: 1.5rem;
+      font-size: 0.85rem;
+      letter-spacing: 0.05em;
+    }
+
+    .birthday-row td {
+      background: rgba(196, 122, 90, 0.08);
+      border-radius: 8px;
+    }
+
+    /* FAQ */
+    .faq-section { padding: 6rem 2rem; }
+    .faq-inner { max-width: 700px; margin: 0 auto; }
+
+    .faq-item {
+      border-bottom: 1px solid var(--sand);
+    }
+
+    .faq-question {
+      width: 100%;
+      background: none;
+      border: none;
+      cursor: pointer;
+      text-align: left;
+      padding: 1.4rem 0;
+      font-family: 'Playfair Display', serif;
+      font-size: 1.1rem;
+      color: var(--warm-dark);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 1rem;
+      line-height: 1.4;
+    }
+
+    .faq-question:hover { color: var(--terracotta); }
+
+    .faq-icon {
+      font-size: 1.2rem;
+      color: var(--terracotta);
+      transition: transform 0.3s ease;
+      flex-shrink: 0;
+    }
+
+    .faq-item.open .faq-icon { transform: rotate(45deg); }
+
+    .faq-answer {
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.4s ease, padding 0.3s ease;
+      font-size: 0.95rem;
+      line-height: 1.8;
+      color: var(--text);
+    }
+
+    .faq-item.open .faq-answer {
+      max-height: 400px;
+      padding-bottom: 1.4rem;
+    }
+
+    /* FORM */
+    .form-section { background: var(--beige); padding: 5rem 2rem; }
+    .form-inner { max-width: 650px; margin: 0 auto; }
+
+    .form-subtitle {
+      font-size: 1rem;
+      line-height: 1.7;
+      color: var(--text);
+      margin-bottom: 2.5rem;
+    }
+
+    .form-group {
+      margin-bottom: 1.5rem;
+    }
+
+    label {
+      display: block;
+      font-size: 0.75rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--terracotta);
+      margin-bottom: 0.5rem;
+    }
+
+    input[type="text"],
+    input[type="email"],
+    input[type="date"],
+    input[type="time"],
+    select,
+    textarea {
+      width: 100%;
+      padding: 0.9rem 1.1rem;
+      background: var(--white);
+      border: 1px solid var(--sand);
+      border-radius: 8px;
+      font-family: 'Lato', sans-serif;
+      font-size: 0.95rem;
+      color: var(--text);
+      outline: none;
+      transition: border-color 0.2s;
+      -webkit-appearance: none;
+      appearance: none;
+    }
+
+    input:focus, select:focus, textarea:focus {
+      border-color: var(--terracotta);
+    }
+
+    .rsvp-buttons {
+      display: flex;
+      gap: 1rem;
+    }
+
+    .rsvp-btn {
+      flex: 1;
+      padding: 1rem;
+      border: 2px solid var(--sand);
+      background: var(--white);
+      border-radius: 10px;
+      font-family: 'Lato', sans-serif;
+      font-size: 0.95rem;
+      color: var(--text);
+      cursor: pointer;
+      transition: all 0.2s;
+      text-align: center;
+    }
+
+    .rsvp-btn.selected,
+    .rsvp-btn:hover {
+      border-color: var(--terracotta);
+      background: rgba(196, 122, 90, 0.08);
+      color: var(--terracotta);
+    }
+
+    .date-time-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1rem;
+    }
+
+    @media (max-width: 500px) {
+      .date-time-grid { grid-template-columns: 1fr; }
+    }
+
+    .submit-btn {
+      width: 100%;
+      padding: 1.1rem 2rem;
+      background: var(--terracotta);
+      color: var(--white);
+      border: none;
+      border-radius: 10px;
+      font-family: 'Lato', sans-serif;
+      font-size: 1rem;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      cursor: pointer;
+      transition: background 0.2s, transform 0.1s;
+      margin-top: 1rem;
+    }
+
+    .submit-btn:hover { background: var(--terra-dark); }
+    .submit-btn:active { transform: scale(0.99); }
+
+    .form-note {
+      font-size: 0.8rem;
+      color: var(--sand);
+      text-align: center;
+      margin-top: 1rem;
+    }
+
+    #form-success {
+      display: none;
+      text-align: center;
+      padding: 3rem 2rem;
+      background: var(--white);
+      border-radius: 16px;
+      border: 1px solid var(--sand);
+    }
+
+    #form-success h3 {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.8rem;
+      color: var(--terracotta);
+      margin-bottom: 1rem;
+    }
+
+    /* FOOTER */
+    footer {
+      text-align: center;
+      padding: 3rem 2rem;
+      background: var(--warm-dark);
+      color: var(--sand);
+      font-size: 0.8rem;
+      letter-spacing: 0.1em;
+    }
+
+    footer .palm { font-size: 1.5rem; margin-bottom: 0.5rem; display: block; }
+
+    /* ANIMATIONS */
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(20px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    .reveal {
+      opacity: 0;
+      transform: translateY(30px);
+      transition: opacity 0.7s ease, transform 0.7s ease;
+    }
+
+    .reveal.visible {
+      opacity: 1;
+      transform: none;
+    }
+
+    /* MOBILE NAV */
+    @media (max-width: 600px) {
+      nav { gap: 1rem; padding: 0.8rem 1rem; }
+      nav a { font-size: 0.7rem; }
+    }
+  </style>
+</head>
+<body>
+
+<canvas id="confetti-canvas"></canvas>
+
+<nav>
+  <a href="#countdown">Countdown</a>
+  <a href="#details">Details</a>
+  <a href="#schedule">Zeitplan</a>
+  <a href="#faq">FAQ</a>
+  <a href="#rsvp">Anmelden</a>
+</nav>
+
+<!-- HERO -->
+<section class="hero" id="top">
+  <p class="hero-eyebrow">Du bist eingeladen</p>
+  <h1 class="hero-title">Laura's<br><em>Dirty 30</em></h1>
+  <p class="hero-subtitle">Mallorca Edition</p>
+  <p class="hero-meta">13.&nbsp;– 19. Juni 2027 &nbsp;·&nbsp; Mallorca, Spanien</p>
+  <div class="palm-row">🌴 ☀️ 🌴</div>
+  <div class="scroll-hint">Scroll</div>
+</section>
+
+<hr class="divider" />
+
+<!-- COUNTDOWN -->
+<div class="countdown-section" id="countdown">
+  <span class="section-label">Noch nicht lange hin</span>
+  <h2 class="section-title" style="max-width:600px;margin:0 auto 2.5rem;">Bis zum großen Tag</h2>
+  <div class="countdown-grid">
+    <div class="countdown-box">
+      <span class="countdown-number" id="cd-days">--</span>
+      <span class="countdown-label">Tage</span>
+    </div>
+    <div class="countdown-box">
+      <span class="countdown-number" id="cd-hours">--</span>
+      <span class="countdown-label">Stunden</span>
+    </div>
+    <div class="countdown-box">
+      <span class="countdown-number" id="cd-minutes">--</span>
+      <span class="countdown-label">Minuten</span>
+    </div>
+    <div class="countdown-box">
+      <span class="countdown-number" id="cd-seconds">--</span>
+      <span class="countdown-label">Sekunden</span>
+    </div>
+  </div>
+</div>
+
+<hr class="divider" style="margin-top:0;" />
+
+<!-- DETAILS -->
+<section id="details">
+  <div class="reveal">
+    <span class="section-label">Was, Wann, Wo</span>
+    <h2 class="section-title">Die wichtigsten Fakten</h2>
+  </div>
+  <div class="details-grid reveal">
+    <div class="detail-card">
+      <span class="icon">📅</span>
+      <h3>Wann</h3>
+      <p>Sonntag, 13. Juni bis Samstag, 19. Juni 2027.<br/>Eine ganze Woche Geburtstag. Ja, wirklich.</p>
+    </div>
+    <div class="detail-card">
+      <span class="icon">📍</span>
+      <h3>Wo</h3>
+      <p>Eine Villa in Inca, Mallorca. Die genaue Adresse bekommt ihr kurz vor der Reise.</p>
+    </div>
+    <div class="detail-card">
+      <span class="icon">✈️</span>
+      <h3>Anreise</h3>
+      <p>Flug und Anreise organisiert ihr selbst. Wer früher oder später ankommt, bitte eine eigene Unterkunft buchen.</p>
+    </div>
+    <div class="detail-card">
+      <span class="icon">🎂</span>
+      <h3>Das Ziel</h3>
+      <p>30 werden, feiern, Sonne tanken. In dieser Reihenfolge oder auch durcheinander.</p>
+    </div>
+  </div>
+</section>
+
+<hr class="divider" />
+
+<!-- SCHEDULE -->
+<div class="schedule-section" id="schedule">
+  <div class="schedule-inner">
+    <div class="reveal">
+      <span class="section-label">Vorläufiger Plan</span>
+      <h2 class="section-title">Die Woche im Überblick</h2>
+      <p style="font-size:0.9rem;color:var(--text);margin-bottom:0.5rem;">
+        Alles ohne Garantie. Der Strand läuft schließlich nicht weg.
+      </p>
+    </div>
+    <table class="schedule-table reveal">
+      <tbody>
+        <tr>
+          <td>So 13.06.</td>
+          <td>Anreise – willkommen auf der Insel 🌊</td>
+        </tr>
+        <tr>
+          <td>Mo 14.06.</td>
+          <td>Strand, Meer, nichts denken</td>
+        </tr>
+        <tr class="birthday-row">
+          <td>Di 15.06.</td>
+          <td>🎂 DER Tag. Lauras 30. Geburtstag!</td>
+        </tr>
+        <tr>
+          <td>Mi 16.06.</td>
+          <td>Recovery Day – vollkommen legitim</td>
+        </tr>
+        <tr>
+          <td>Do 17.06.</td>
+          <td>TBD – wird sich zeigen</td>
+        </tr>
+        <tr>
+          <td>Fr 18.06.</td>
+          <td>TBD – improvisation ist auch eine Kunst</td>
+        </tr>
+        <tr>
+          <td>Sa 19.06.</td>
+          <td>Abreise – mit Koffer voller Erinnerungen</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<hr class="divider" style="margin-top:0;" />
+
+<!-- FAQ -->
+<div class="faq-section" id="faq">
+  <div class="faq-inner">
+    <div class="reveal">
+      <span class="section-label">Die Fragen die ihr eh stellt</span>
+      <h2 class="section-title">FAQ</h2>
+    </div>
+    <div class="faq-list reveal">
+
+      <div class="faq-item">
+        <button class="faq-question" onclick="toggleFaq(this)">
+          Was muss ich bezahlen?
+          <span class="faq-icon">+</span>
+        </button>
+        <div class="faq-answer">
+          Euren Hin- und Rückflug und was ihr vor Ort so an Essen und Shopping versenkt. Die Unterkunft für die Woche ist abgedeckt. Das Wesentliche also: ihr müsst nur hinkommen.
+        </div>
+      </div>
+
+      <div class="faq-item">
+        <button class="faq-question" onclick="toggleFaq(this)">
+          Was muss ich mitbringen?
+          <span class="faq-icon">+</span>
+        </button>
+        <div class="faq-answer">
+          Dich, Spaß und gute Laune. Dazu alles, was du für eine Woche Mallorca brauchst: Klamotten, Sonnencreme, Kosmetik – das übliche Gepäck. Geschenke ausdrücklich nicht erwünscht (mehr dazu weiter unten).
+        </div>
+      </div>
+
+      <div class="faq-item">
+        <button class="faq-question" onclick="toggleFaq(this)">
+          Muss ich dir auch noch was schenken?
+          <span class="faq-icon">+</span>
+        </button>
+        <div class="faq-answer">
+          Nein! Auf gar keinen Fall. Deine Anwesenheit bei meiner Geburtstagswoche ist das größte Geschenk das ich mir vorstellen kann. Wer trotzdem etwas mitbringt, bekommt einen streng mahnenden Blick. 👀
+        </div>
+      </div>
+
+      <div class="faq-item">
+        <button class="faq-question" onclick="toggleFaq(this)">
+          Was ist, wenn ich keinen Urlaub nehmen kann?
+          <span class="faq-icon">+</span>
+        </button>
+        <div class="faq-answer">
+          Wer Home Office machen kann: Es gibt durchaus Möglichkeiten, remote zu arbeiten. Eine Villa auf Mallorca ist kein schlechtes Büro. Wer weder Urlaub noch Home Office hinbekommt – kein Stress, einfach kurz Bescheid geben. Wir verstehen das.
+        </div>
+      </div>
+
+      <div class="faq-item">
+        <button class="faq-question" onclick="toggleFaq(this)">
+          Was ist, wenn ich früher ankomme oder später abreise?
+          <span class="faq-icon">+</span>
+        </button>
+        <div class="faq-answer">
+          Sehr gerne! Bitte dann eigenständig eine Unterkunft oder ein Hotel buchen. Mallorca hat da einiges zu bieten.
+        </div>
+      </div>
+
+      <div class="faq-item">
+        <button class="faq-question" onclick="toggleFaq(this)">
+          Muss ich die ganze Woche da sein?
+          <span class="faq-icon">+</span>
+        </button>
+        <div class="faq-answer">
+          Kein Muss. Komm so lange du kannst. Gib einfach im Formular unten an, wann du an- und abreist – dann können wir besser planen.
+        </div>
+      </div>
+
+      <div class="faq-item">
+        <button class="faq-question" onclick="toggleFaq(this)">
+          Wo genau wohnen wir?
+          <span class="faq-icon">+</span>
+        </button>
+        <div class="faq-answer">
+          In einer Villa in Inca auf Mallorca. Die genaue Adresse gibt es kurz vor dem Trip – damit die Spannung bis zuletzt erhalten bleibt.
+        </div>
+      </div>
+
+      <div class="faq-item">
+        <button class="faq-question" onclick="toggleFaq(this)">
+          Warum nicht einfach eine normale Feier in Deutschland?
+          <span class="faq-icon">+</span>
+        </button>
+        <div class="faq-answer">
+          Vier sehr gute Gründe:<br/><br/>
+          1. Ich werde nur einmal 30.<br/>
+          2. Ich bin verrückt – das weißt du.<br/>
+          3. Mein Geburtstag fällt auf einen Dienstag. Dienstags feiert man nicht. Das wollte ich nicht hinnehmen.<br/>
+          4. Andere heiraten oder bekommen Kinder. Ich mache halt eine Geburtstagswoche auf Mallorca. Beides hat seine Berechtigung.
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<hr class="divider" />
+
+<!-- RSVP FORM -->
+<div class="form-section" id="rsvp">
+  <div class="form-inner">
+    <div class="reveal">
+      <span class="section-label">Bitte bis 15. Dezember 2026</span>
+      <h2 class="section-title">Bist du dabei?</h2>
+      <p class="form-subtitle">
+        Damit ich planen kann, bitte ich dich bis zum 15.&nbsp;Dezember 2026 kurz Bescheid zu geben. Ob Ja oder Nein – beides ist okay. Einfach das Formular ausfüllen.
+      </p>
+    </div>
+
+    <div id="form-success">
+      <h3>🎉 Danke!</h3>
+      <p>Deine Antwort ist angekommen. Ich melde mich bald mit weiteren Details.</p>
+    </div>
+
+    <!-- 
+      ==========================================
+      FORMSPREE SETUP (einmalig nötig):
+      1. Geh auf https://formspree.io und erstelle ein kostenloses Konto
+      2. Erstelle ein neues "Form"
+      3. Kopiere deine Form-ID (sieht so aus: xabcdefg)
+      4. Ersetze "DEINE_FORMSPREE_ID" unten mit deiner ID
+      ==========================================
+    -->
+    <form id="rsvp-form" action="https://formspree.io/f/DEINE_FORMSPREE_ID" method="POST" class="reveal">
+      
+      <div class="form-group">
+        <label for="name">Dein Name</label>
+        <input type="text" id="name" name="name" placeholder="Vorname Nachname" required />
+      </div>
+
+      <div class="form-group">
+        <label for="email">Deine E-Mail</label>
+        <input type="email" id="email" name="email" placeholder="du@beispiel.de" required />
+      </div>
+
+      <div class="form-group">
+        <label>Ich nehme teil</label>
+        <div class="rsvp-buttons">
+          <button type="button" class="rsvp-btn" id="btn-ja" onclick="selectRsvp('ja')">✅ Ja, ich bin dabei!</button>
+          <button type="button" class="rsvp-btn" id="btn-nein" onclick="selectRsvp('nein')">❌ Leider nein</button>
+        </div>
+        <input type="hidden" name="teilnahme" id="rsvp-value" required />
+      </div>
+
+      <div id="travel-fields" style="display:none;">
+        <div class="date-time-grid">
+          <div class="form-group">
+            <label for="ankunft-datum">Ankunft am</label>
+            <input type="date" id="ankunft-datum" name="ankunft_datum" min="2027-06-13" max="2027-06-19" />
+          </div>
+          <div class="form-group">
+            <label for="ankunft-zeit">Ankunftszeit (ca.)</label>
+            <input type="time" id="ankunft-zeit" name="ankunft_zeit" />
+          </div>
+        </div>
+
+        <div class="date-time-grid">
+          <div class="form-group">
+            <label for="abreise-datum">Abreise am</label>
+            <input type="date" id="abreise-datum" name="abreise_datum" min="2027-06-13" max="2027-06-22" />
+          </div>
+          <div class="form-group">
+            <label for="abreise-zeit">Abreisezeit (ca.)</label>
+            <input type="time" id="abreise-zeit" name="abreise_zeit" />
+          </div>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="nachricht">Nachricht (optional)</label>
+        <textarea id="nachricht" name="nachricht" rows="3" placeholder="Fragen, Anmerkungen, Liebesbriefe..."></textarea>
+      </div>
+
+      <button type="submit" class="submit-btn">Absenden 🌴</button>
+      <p class="form-note">Deine Antwort landet direkt bei Laura. Kein Spam, versprochen.</p>
+    </form>
+  </div>
+</div>
+
+<footer>
+  <span class="palm">🌴</span>
+  Lauras Dirty 30 – Mallorca Edition 2027<br/>
+  Mit Liebe gebaut, weil 30 werden es verdient.
+</footer>
+
+<script>
+  // =================== KONFETTI ===================
+  const canvas = document.getElementById('confetti-canvas');
+  const ctx = canvas.getContext('2d');
+  canvas.width = window.innerWidth;
+  canvas.height = window.innerHeight;
+
+  const colors = ['#c47a5a','#7a8c6a','#d4c4a8','#e8ddd0','#f5c4a0','#a05c3a'];
+  const pieces = [];
+
+  for (let i = 0; i < 150; i++) {
+    pieces.push({
+      x: Math.random() * canvas.width,
+      y: Math.random() * canvas.height - canvas.height,
+      r: Math.random() * 6 + 4,
+      d: Math.random() * 80 + 40,
+      color: colors[Math.floor(Math.random() * colors.length)],
+      tilt: Math.floor(Math.random() * 10) - 10,
+      tiltAngle: 0,
+      tiltAngleInc: Math.random() * 0.07 + 0.05,
+      shape: Math.random() > 0.5 ? 'circle' : 'rect',
+      opacity: 1,
+    });
+  }
+
+  let angle = 0;
+  let frameCount = 0;
+  const maxFrames = 280;
+
+  function drawConfetti() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    angle += 0.01;
+    frameCount++;
+
+    pieces.forEach((p, i) => {
+      p.tiltAngle += p.tiltAngleInc;
+      p.y += (Math.cos(angle + p.d) + 2.5) * 0.9;
+      p.x += Math.sin(angle);
+      p.tilt = Math.sin(p.tiltAngle) * 12;
+
+      if (frameCount > maxFrames * 0.6) {
+        p.opacity = Math.max(0, p.opacity - 0.012);
+      }
+
+      ctx.save();
+      ctx.globalAlpha = p.opacity;
+      ctx.fillStyle = p.color;
+      ctx.beginPath();
+      if (p.shape === 'circle') {
+        ctx.arc(p.x + p.tilt, p.y, p.r, 0, Math.PI * 2);
+      } else {
+        ctx.rect(p.x + p.tilt, p.y, p.r * 1.5, p.r * 0.7);
+      }
+      ctx.fill();
+      ctx.restore();
+
+      if (p.y > canvas.height) {
+        p.x = Math.random() * canvas.width;
+        p.y = -10;
+      }
+    });
+
+    if (frameCount < maxFrames) {
+      requestAnimationFrame(drawConfetti);
+    } else {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+    }
+  }
+
+  window.addEventListener('load', () => setTimeout(drawConfetti, 300));
+  window.addEventListener('resize', () => {
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+  });
+
+  // =================== COUNTDOWN ===================
+  function updateCountdown() {
+    const target = new Date('2027-06-15T00:00:00');
+    const now = new Date();
+    const diff = target - now;
+
+    if (diff <= 0) {
+      document.getElementById('cd-days').textContent = '🎂';
+      document.getElementById('cd-hours').textContent = '🎉';
+      document.getElementById('cd-minutes').textContent = '🌴';
+      document.getElementById('cd-seconds').textContent = '☀️';
+      return;
+    }
+
+    const days    = Math.floor(diff / (1000 * 60 * 60 * 24));
+    const hours   = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+    const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+    const seconds = Math.floor((diff % (1000 * 60)) / 1000);
+
+    document.getElementById('cd-days').textContent    = String(days).padStart(2, '0');
+    document.getElementById('cd-hours').textContent   = String(hours).padStart(2, '0');
+    document.getElementById('cd-minutes').textContent = String(minutes).padStart(2, '0');
+    document.getElementById('cd-seconds').textContent = String(seconds).padStart(2, '0');
+  }
+
+  updateCountdown();
+  setInterval(updateCountdown, 1000);
+
+  // =================== FAQ ===================
+  function toggleFaq(btn) {
+    const item = btn.closest('.faq-item');
+    item.classList.toggle('open');
+  }
+
+  // =================== RSVP ===================
+  function selectRsvp(val) {
+    document.getElementById('rsvp-value').value = val;
+    document.getElementById('btn-ja').classList.toggle('selected', val === 'ja');
+    document.getElementById('btn-nein').classList.toggle('selected', val === 'nein');
+    document.getElementById('travel-fields').style.display = val === 'ja' ? 'block' : 'none';
+  }
+
+  // FORM SUBMIT
+  const form = document.getElementById('rsvp-form');
+  form.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const data = new FormData(form);
+    try {
+      const res = await fetch(form.action, {
+        method: 'POST',
+        body: data,
+        headers: { 'Accept': 'application/json' }
+      });
+      if (res.ok) {
+        form.style.display = 'none';
+        document.getElementById('form-success').style.display = 'block';
+      } else {
+        alert('Etwas ist schiefgelaufen. Bitte direkt per Mail melden!');
+      }
+    } catch {
+      alert('Netzwerkfehler. Bitte direkt per Mail melden!');
+    }
+  });
+
+  // =================== SCROLL REVEAL ===================
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if (e.isIntersecting) e.target.classList.add('visible');
+    });
+  }, { threshold: 0.1 });
+
+  document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+</script>
+</body>
+</html>
